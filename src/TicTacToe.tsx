@@ -5,6 +5,9 @@ interface GameState {
   board: Array<Array<string | null>>;
   player: string;
   winner: string | null;
+  numXWins: number;
+  numOWins: number;
+  numDraws: number;
 }
 
 function saveGameState(gameState: GameState) {
@@ -21,7 +24,10 @@ function loadGameState() : GameState {
               [null, null, null]
           ],
           player: 'X',
-          winner: null
+          winner: null,
+          numXWins: 0,
+          numOWins: 0,
+          numDraws: 0
       }
   }
   return JSON.parse(gameStateString)
@@ -38,7 +44,19 @@ const TicTacToe : React.FC = () => {
           const newGameState = {
               board: board,
               player: player === 'X' ? 'O' : 'X',
-              winner: checkWinner(board, player)
+              winner: checkWinner(board, player),
+              numXWins: gameState.numXWins,
+              numOWins: gameState.numOWins,
+              numDraws: gameState.numDraws
+          }
+          if (newGameState.winner === 'X') {
+              newGameState.numXWins = gameState.numXWins + 1
+          }
+          if (newGameState.winner === 'O') {
+              newGameState.numOWins = gameState.numOWins + 1
+          }
+          if (newGameState.winner === null && newGameState.board.every(row => row.every(col => col !== null))) {
+              newGameState.numDraws = gameState.numDraws + 1
           }
           setGameState(newGameState)
           saveGameState(newGameState)
@@ -74,7 +92,10 @@ const TicTacToe : React.FC = () => {
                 [null, null, null]
             ],
             player: 'X',
-            winner: null
+            winner: null,
+            numXWins: gameState.numXWins,
+            numOWins: gameState.numOWins,
+            numDraws: gameState.numDraws
         })
         saveGameState({
             board: [
@@ -83,7 +104,10 @@ const TicTacToe : React.FC = () => {
                 [null, null, null]
             ],
             player: 'X',
-            winner: null
+            winner: null,
+            numXWins: gameState.numXWins,
+            numOWins: gameState.numOWins,
+            numDraws: gameState.numDraws
         })
     }
 
@@ -133,12 +157,29 @@ const TicTacToe : React.FC = () => {
         )
     }
 
+    const renderStats = () => {
+        return (
+            <div>
+                <div>
+                    X wins: {gameState.numXWins}
+                </div>
+                <div>
+                    O wins: {gameState.numOWins}
+                </div>
+                <div>
+                    Draws: {gameState.numDraws}
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="game">
             <div className="game-board">
                 {renderBoard()}
             </div>
             <div className="game-info">
+                {renderStats()}
                 {gameState.winner && renderWinner()}
                 {gameState.winner === null && gameState.board.every(row => row.every(col => col !== null)) && renderDraw()}
                 <button onClick={resetGame}>

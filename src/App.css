@@ -42,3 +42,42 @@
   align-items: center;
   font-size: 20px;
 }
+
+.game-info {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 2px;
+  padding: 2px;
+  color: #555;
+  font-size: 85%;
+  line-height: 130%;
+  box-shadow: 0 0 5px 1px #aaa;
+  border: 1px solid #aaa;
+}
+
+.game-info:before {
+  content: 'Game info';
+  display: block;
+  font-size: 75%;
+  margin-bottom: 5px;
+}
+
+.game-info button {
+  border: none;
+  border-radius: 5px;
+  background-color: gold;
+  color: #555;
+  cursor: pointer;
+  padding: 5px 10px;
+  line-height: 1;
+}
+
+.game-info button:hover {
+  background-color: orange;
+}
+
+.game-info button:active {
+  background-color: red;
+}
+
