@@ -208,11 +208,9 @@ This is a function that saves the above game state to local storage:
 function saveGameState(gameState: GameState) {
     localStorage.setItem('gameState', JSON.stringify(gameState))
 }
-```
 
-This is a function that loads the game state from local storage:
+// This is a function that loads the game state from local storage:
 
-```typescript
 function loadGameState() : GameState {
     const gameStateString = localStorage.getItem('gameState')
     if (gameStateString === null) {
@@ -641,3 +639,350 @@ this is a css file that rounds the corners of the reset button and adds some col
   background-color: red;
 }
 ```
+
+Write a typescript function that takes a tic tac toe game state of this type:
+
+interface GameState {
+  board: Array<Array<string | null>>;
+  player: string;
+  winner: string | null;
+  numXWins: number;
+  numOWins: number;
+  numDraws: number;
+}
+
+and outputs the row and column of the next best move:
+
+```typescript
+function getNextMove(gameState: GameState): {row: number, column: number} {
+  //TODO
+}
+```
+
+what is the problem with the above function?
+
+```
+There is no return type specified for the getNextMove function.
+```
+
+rewrite the function to address that issue.
+
+```typescript
+function getNextMove(gameState: GameState): {row: number, column: number} {
+  //TODO
+  return {row: 0, column: 0};
+}
+```
+
+Update the above function to only return valid moves for the game tic tac toe:
+
+```typescript
+function getNextMove(gameState: GameState): {row: number, column: number} {
+  //TODO
+  for (let row = 0; row < gameState.board.length; row++) {
+    for (let column = 0; column < gameState.board[row].length; column++) {
+      if (gameState.board[row][column] === null) {
+        return {row: row, column: column};
+      }
+    }
+  }
+  return null;
+}
+```
+
+Update the above function to make a winning move if possible:
+
+```typescript
+function getNextMove(gameState: GameState): {row: number, column: number} {
+  //TODO
+  for (let row = 0; row < gameState.board.length; row++) {
+    for (let column = 0; column < gameState.board[row].length; column++) {
+      if (gameState.board[row][column] === null) {
+        //check if move is winning move
+        if (
+          (row === 0 &&
+            gameState.board[1][column] === gameState.player &&
+            gameState.board[2][column] === gameState.player) ||
+          (row === 1 &&
+            gameState.board[0][column] === gameState.player &&
+            gameState.board[2][column] === gameState.player) ||
+          (row === 2 &&
+            gameState.board[0][column] === gameState.player &&
+            gameState.board[1][column] === gameState.player) ||
+          (column === 0 &&
+            gameState.board[row][1] === gameState.player &&
+            gameState.board[row][2] === gameState.player) ||
+          (column === 1 &&
+            gameState.board[row][0] === gameState.player &&
+            gameState.board[row][2] === gameState.player) ||
+          (column === 2 &&
+            gameState.board[row][0] === gameState.player &&
+            gameState.board[row][1] === gameState.player) ||
+          (row === column &&
+            gameState.board[0][0] === gameState.player &&
+            gameState.board[1][1] === gameState.player &&
+            gameState.board[2][2] === gameState.player) ||
+          (row + column === 2 &&
+            gameState.board[0][2] === gameState.player &&
+            gameState.board[1][1] === gameState.player &&
+            gameState.board[2][0] === gameState.player)
+        ) {
+          return {row: row, column: column};
+        }
+      }
+    }
+  }
+  return null;
+}
+```
+
+Update the function to otherwise block the other player from winning:
+
+```typescript
+function getNextMove(gameState: GameState): {row: number, column: number} {
+  //TODO
+  for (let row = 0; row < gameState.board.length; row++) {
+    for (let column = 0; column < gameState.board[row].length; column++) {
+      if (gameState.board[row][column] === null) {
+        //check if move is winning move
+        if (
+          (row === 0 &&
+            gameState.board[1][column] === gameState.player &&
+            gameState.board[2][column] === gameState.player) ||
+          (row === 1 &&
+            gameState.board[0][column] === gameState.player &&
+            gameState.board[2][column] === gameState.player) ||
+          (row === 2 &&
+            gameState.board[0][column] === gameState.player &&
+            gameState.board[1][column] === gameState.player) ||
+          (column === 0 &&
+            gameState.board[row][1] === gameState.player &&
+            gameState.board[row][2] === gameState.player) ||
+          (column === 1 &&
+            gameState.board[row][0] === gameState.player &&
+            gameState.board[row][2] === gameState.player) ||
+          (column === 2 &&
+            gameState.board[row][0] === gameState.player &&
+            gameState.board[row][1] === gameState.player) ||
+          (row === column &&
+            gameState.board[0][0] === gameState.player &&
+            gameState.board[1][1] === gameState.player &&
+            gameState.board[2][2] === gameState.player) ||
+          (row + column === 2 &&
+            gameState.board[0][2] === gameState.player &&
+            gameState.board[1][1] === gameState.player &&
+            gameState.board[2][0] === gameState.player)
+        ) {
+          return {row: row, column: column};
+        }
+        //check if move blocks other player from winning
+        if (
+          (row === 0 &&
+            gameState.board[1][column] === gameState.player &&
+            gameState.board[2][column] === gameState.player) ||
+          (row === 1 &&
+            gameState.board[0][column] === gameState.player &&
+            gameState.board[2][column] === gameState.player) ||
+          (row === 2 &&
+            gameState.board[0][column] === gameState.player &&
+            gameState.board[1][column] === gameState.player) ||
+          (column === 0 &&
+            gameState.board[row][1] === gameState.player &&
+            gameState.board[row][2] === gameState.player) ||
+          (column === 1 &&
+            gameState.board[row][0] === gameState.player &&
+            gameState.board[row][2] === gameState.player) ||
+          (column === 2 &&
+            gameState.board[row][0] === gameState.player &&
+            gameState.board[row][1] === gameState.player) ||
+          (row === column &&
+            gameState.board[0][0] === gameState.player &&
+            gameState.board[1][1] === gameState.player &&
+            gameState.board[2][2] === gameState.player) ||
+          (row + column === 2 &&
+            gameState.board[0][2] === gameState.player &&
+            gameState.board[1][1] === gameState.player &&
+            gameState.board[2][0] === gameState.player)
+        ) {
+          return {row: row, column: column};
+        }
+      }
+    }
+  }
+  return null;
+}
+```
+
+what is wrong with the above function?
+
+```
+The function does not check if the game is over before making a move.
+```
+
+rewrite the function to address that issue.
+
+```typescript
+function getNextMove(gameState: GameState): {row: number, column: number} {
+  //TODO
+  if (gameState.winner === null) {
+    for (let row = 0; row < gameState.board.length; row++) {
+      for (let column = 0; column < gameState.board[row].length; column++) {
+        if (gameState.board[row][column] === null) {
+          //check if move is winning move
+          if (
+            (row === 0 &&
+              gameState.board[1][column] === gameState.player &&
+              gameState.board[2][column] === gameState.player) ||
+            (row === 1 &&
+              gameState.board[0][column] === gameState.player &&
+              gameState.board[2][column] === gameState.player) ||
+            (row === 2 &&
+              gameState.board[0][column] === gameState.player &&
+              gameState.board[1][column] === gameState.player) ||
+            (column === 0 &&
+              gameState.board[row][1] === gameState.player &&
+              gameState.board[row][2] === gameState.player) ||
+            (column === 1 &&
+              gameState.board[row][0] === gameState.player &&
+              gameState.board[row][2] === gameState.player) ||
+            (column === 2 &&
+              gameState.board[row][0] === gameState.player &&
+              gameState.board[row][1] === gameState.player) ||
+            (row === column &&
+              gameState.board[0][0] === gameState.player &&
+              gameState.board[1][1] === gameState.player &&
+              gameState.board[2][2] === gameState.player) ||
+            (row + column === 2 &&
+              gameState.board[0][2] === gameState.player &&
+              gameState.board[1][1] === gameState.player &&
+              gameState.board[2][0] === gameState.player)
+          ) {
+            return {row: row, column: column};
+          }
+          //check if move blocks other player from winning
+          if (
+            (row === 0 &&
+              gameState.board[1][column] === gameState.player &&
+              gameState.board[2][column] === gameState.player) ||
+            (row === 1 &&
+              gameState.board[0][column] === gameState.player &&
+              gameState.board[2][column] === gameState.player) ||
+            (row === 2 &&
+              gameState.board[0][column] === gameState.player &&
+              gameState.board[1][column] === gameState.player) ||
+            (column === 0 &&
+              gameState.board[row][1] === gameState.player &&
+              gameState.board[row][2] === gameState.player) ||
+            (column === 1 &&
+              gameState.board[row][0] === gameState.player &&
+              gameState.board[row][2] === gameState.player) ||
+            (column === 2 &&
+              gameState.board[row][0] === gameState.player &&
+              gameState.board[row][1] === gameState.player) ||
+            (row === column &&
+              gameState.board[0][0] === gameState.player &&
+              gameState.board[1][1] === gameState.player &&
+              gameState.board[2][2] === gameState.player) ||
+            (row + column === 2 &&
+              gameState.board[0][2] === gameState.player &&
+              gameState.board[1][1] === gameState.player &&
+              gameState.board[2][0] === gameState.player)
+          ) {
+            return {row: row, column: column};
+          }
+        }
+      }
+    }
+  }
+  return null;
+}
+```
+
+what is wrong with the return type of the function?
+
+```
+The return type of the function is specified as {row: number, column: number} but the function returns null if there are no valid moves.
+```
+
+rewrite the function to address that issue.
+
+```typescript
+function getNextMove(gameState: GameState): {row: number, column: number} | null {
+  //TODO
+  if (gameState.winner === null) {
+    for (let row = 0; row < gameState.board.length; row++) {
+      for (let column = 0; column < gameState.board[row].length; column++) {
+        if (gameState.board[row][column] === null) {
+          //check if move is winning move
+          if (
+            (row === 0 &&
+              gameState.board[1][column] === gameState.player &&
+              gameState.board[2][column] === gameState.player) ||
+            (row === 1 &&
+              gameState.board[0][column] === gameState.player &&
+              gameState.board[2][column] === gameState.player) ||
+            (row === 2 &&
+              gameState.board[0][column] === gameState.player &&
+              gameState.board[1][column] === gameState.player) ||
+            (column === 0 &&
+              gameState.board[row][1] === gameState.player &&
+              gameState.board[row][2] === gameState.player) ||
+            (column === 1 &&
+              gameState.board[row][0] === gameState.player &&
+              gameState.board[row][2] === gameState.player) ||
+            (column === 2 &&
+              gameState.board[row][0] === gameState.player &&
+              gameState.board[row][1] === gameState.player) ||
+            (row === column &&
+              gameState.board[0][0] === gameState.player &&
+              gameState.board[1][1] === gameState.player &&
+              gameState.board[2][2] === gameState.player) ||
+            (row + column === 2 &&
+              gameState.board[0][2] === gameState.player &&
+              gameState.board[1][1] === gameState.player &&
+              gameState.board[2][0] === gameState.player)
+          ) {
+            return {row: row, column: column};
+          }
+          //check if move blocks other player from winning
+          if (
+            (row === 0 &&
+              gameState.board[1][column] === gameState.player &&
+              gameState.board[2][column] === gameState.player) ||
+            (row === 1 &&
+              gameState.board[0][column] === gameState.player &&
+              gameState.board[2][column] === gameState.player) ||
+            (row === 2 &&
+              gameState.board[0][column] === gameState.player &&
+              gameState.board[1][column] === gameState.player) ||
+            (column === 0 &&
+              gameState.board[row][1] === gameState.player &&
+              gameState.board[row][2] === gameState.player) ||
+            (column === 1 &&
+              gameState.board[row][0] === gameState.player &&
+              gameState.board[row][2] === gameState.player) ||
+            (column === 2 &&
+              gameState.board[row][0] === gameState.player &&
+              gameState.board[row][1] === gameState.player) ||
+            (row === column &&
+              gameState.board[0][0] === gameState.player &&
+              gameState.board[1][1] === gameState.player &&
+              gameState.board[2][2] === gameState.player) ||
+            (row + column === 2 &&
+              gameState.board[0][2] === gameState.player &&
+              gameState.board[1][1] === gameState.player &&
+              gameState.board[2][0] === gameState.player)
+          ) {
+            return {row: row, column: column};
+          }
+        }
+      }
+    }
+  }
+  return null;
+}
+```
+
+# TODO
+
+get it to use the getNextMove function to play for O
